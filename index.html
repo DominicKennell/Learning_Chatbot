@@ -3,11 +3,71 @@
 <head>
   <title>Learning Chatbot</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    .chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; margin-bottom: 10px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+
     .bot { color: blue; }
     .user { color: green; }
-    button.link-btn { background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; }
+
+    button.link-btn {
+      background: none;
+      border: none;
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .chat {
+        height: 250px;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      #userInput {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
