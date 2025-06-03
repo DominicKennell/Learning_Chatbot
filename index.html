@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Learning Chatbot</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    .chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; margin-bottom: 10px; }
+    .bot { color: blue; }
+    .user { color: green; }
+    button.link-btn { background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>Learning Chatbot</h2>
+  <div class="chat" id="chat"></div>
+
+  <input type="text" id="userInput" placeholder="Type your message..." style="width: 80%;">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    let links = [
+      { label: "The Big Questions of Biomedical Engineering", url: "https://www.youtube.com/watch?v=WIqZjnmnyZA" },
+      { label: "The Case for Making Art When the World is on Fire", url: "https://www.youtube.com/watch?v=2XZ9z6OewR0" },
+      { label: "A New Understanding of Human History and the Roots of Inequality", url: "https://www.youtube.com/watch?v=8SJi0sHrEI4" },
+      { label: "Stoicism as a Philosophy for an Ordinary Life", url: "https://www.youtube.com/watch?v=Yhn1Fe8cT0Q" },
+      { label: "Who are You, Really? The Puzzle of Personality", url: "https://www.youtube.com/watch?v=qYvXk_bqlBk" },
+      { label: "The science of cells that never get old", url: "https://www.youtube.com/watch?v=2wseM6wWd74"},
+      { label: "Can Art Amend History?", url: "https://www.youtube.com/watch?v=DDaldVHUedI"},
+      { label: "Your Brain on Music", url: "https://www.youtube.com/watch?v=MZFFwy5fwYI"},
+      { label: "How Dance Can Unleash Your Inner Joy", url: "https://www.youtube.com/watch?v=ZHhmi2bS0hU"},
+      { label: "How Quantum Biology Might Explain Life’s Biggest Questions", url: "https://www.youtube.com/watch?v=_qgSz1UmcBM"},
+    ];
+
+    let followUpQuestions = [
+      "Was anything surprising?",
+      "How would you describe it to a friend?",
+      "Why do you think that?",
+      "What do you mean?",
+      "Can you expand?",
+      "What makes you say that?",
+      "What is your biggest take away?",
+      "What makes you say that?",
+      "Did you find the information helpful or interesting? Why?",
+      "Was there anything confusing or unclear?",
+      "Would you recommend this link to someone else? Why or why not?",
+      "How would you use this information in real life?",
+      "What emotions or thoughts did this link evoke for you?",
+      "If you could ask the presenter one question, what would it be?",
+      "Were there any parts you disagreed with? Why?",
+    ];
+
+    let awaitingFollowUp = false;
+    let questionQueue = [];
+    let lastClickedLabel = "";
+
+    const chat = document.getElementById("chat");
+
+    function appendMessage(sender, text) {
+      const p = document.createElement("p");
+      p.innerHTML = `<strong class="${sender}">${sender}:</strong> ${text}`;
+      chat.appendChild(p);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+      appendMessage("User", message);
+      input.value = "";
+
+      if (awaitingFollowUp && questionQueue.length > 0) {
+        const question = questionQueue.shift();
+        appendMessage("Bot", question);
+        if (questionQueue.length === 0) awaitingFollowUp = false;
+      } else {
+        sendLinks();
+      }
+    }
+
+    function sendLinks() {
+      if (links.length === 0) {
+        appendMessage("Bot", "No more links left.");
+        return;
+      }
+
+      appendMessage("Bot", "Here are some links:");
+      shuffleArray(links);
+      links.slice(0, 3).forEach((link, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = link.label;
+        btn.className = "link-btn";
+        btn.onclick = () => openLink(link.url, link.label);
+        const p = document.createElement("p");
+        p.appendChild(btn);
+        chat.appendChild(p);
+      });
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function openLink(url, label) {
+      window.open(url, '_blank');
+      links = links.filter(l => l.label !== label);
+      appendMessage("System", `${label} opened and removed.`);
+      lastClickedLabel = label;
+      questionQueue = shuffleArray(followUpQuestions.slice());
+      awaitingFollowUp = true;
+      appendMessage("Bot", `What did you think of the link?`);
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+  </script>
+
+</body>
+</html>
